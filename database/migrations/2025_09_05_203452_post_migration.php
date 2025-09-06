@@ -22,11 +22,11 @@ $table->timestamps();
         });
 
         Schema::create('post_likes', function(Blueprint  $table){
-          $table->id();
-$table->foreignId('post_id')->constrained()->onDelete('cascade');
-$table->foreignId('user_id')->constrained()->onDelete('cascade');
-$table->unique(['user_id', 'post_id']);
-$table->timestamps();
+    $table->id();
+    $table->foreignId('post_id')->constrained()->onDelete('cascade');
+    $table->foreignId('user_id')->constrained()->onDelete('cascade');
+    $table->unique(['user_id', 'post_id']);
+    $table->timestamps();
         });
         
     }

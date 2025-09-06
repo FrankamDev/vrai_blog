@@ -1,10 +1,7 @@
-const Create = () => {
+import React from 'react'
 
+export const Create = () => {
   return (
-    <div className="create">
-<h1>create</h1>
-    </div>
+    <div>Create</div>
   )
 }
-
-export default Create;

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use Illuminate\Contracts\Cache\Store;
 use Inertia\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -66,13 +68,40 @@ class PostController extends Controller
     $post = new Post();
     $post->title = $validated['title'];
     $post->description = $validated['description'];
-    $post->user_id = Auth::id();
-    // si l'image existe
-    if ($request->hasFile('image')) {
+
+        // si l'image existe 
+        if ($request->hasFile('image')) {
+            if ($post->image) {
+                Storage::disk('public')->delete($post->image);
+            }
       $path = $request->file('image')->store('posts', 'public');
       $post->image = $path;
     }
     $post->save();
-    return redirect()->route('dashboard')->with('success', 'creee avec succes');
-  }
+        return redirect()->route('dashboard')->with('success', 'mis a jour avec succes');
+    }
+
+    public function destroy(Post $post)
+    {
+        if ($post->image) {
+            Storage::disk('public')->delete($post->image);
+        }
+        $post->delete();
+
+        return \redirect()->back()->with('success', 'Post supprime avec succes');
+    }
+
+    public function like (Post $post) {
+        $user = Auth::user();
+
+        if($post->likedBy()->where('user_id', $user->id)->exists()){
+            $post->likedBy()->detach($user->id);
+            $message = 'Post retié !';
+        } else {
+            $post->likedBy()->detach($user->id);
+            $message = 'Post retié !';
+        }
+
+        return \redirect()->with('success', $message);
+    }
 }
