@@ -791,11 +791,14 @@
 //     );
 // }
 
+
+import { usePage } from '@inertiajs/react';
 import React from 'react'
 
 const welcome = () => {
+  const {posts} = usePage<SharedData>().props;
   return (
-    <div>welcome</div>
+    <div>welcome { posts}</div>
   )
 }
 
